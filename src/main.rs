@@ -1,5 +1,1 @@
-
-fn main() {
-
-    print!("hello world")
-}
+fn main() {}
