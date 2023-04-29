@@ -1,30 +1,30 @@
+use rand::Rng;
+use std::cmp::Ordering;
+use std::io;
 
-// A function that takes a 12h time string and returns a 24h time string
-fn convert_12h_to_24h(time: &str) -> String {
-    // Split the time string by ":" and get the hour, minute and second parts
-    let parts: Vec<&str> = time.split(":").collect();
-    let hour = parts[0];
-    let minute = parts[1];
-    let second = parts[2];
-
-    // Check if the time is AM or PM and adjust the hour accordingly
-    let is_pm = second.ends_with("PM");
-    let mut hour_24 = hour.parse::<u32>().unwrap(); // Parse the hour as a u32
-    if is_pm && hour_24 != 12 {
-        // If PM and not 12, add 12 to the hour
-        hour_24 += 12;
-    } else if !is_pm && hour_24 == 12 {
-        // If AM and 12, set the hour to 0
-        hour_24 = 0;
+fn main() {
+    let secret_number = rand::thread_rng().gen_range(1..=100);
+    loop {
+        println!("Guess the number!: ");
+        let input = get_input();
+        match input.cmp(&secret_number) {
+            Ordering::Less => println!("Too small!"),
+            Ordering::Greater => println!("Too big!"),
+            Ordering::Equal => {
+                println!("You win!");
+                break;
+            }
+        }
     }
-
-    // Format the 24h time string with leading zeros if needed
-    format!("{:02}:{:02}:{:02}", hour_24, minute, &second[..2])
 }
 
-// A test case
-fn main() {
-    let time_12h = "12:10:22AM";
-    let time_24h = convert_12h_to_24h(time_12h);
-    println!("{} -> {}", time_12h, time_24h); // Prints "12:10:22AM -> 00:10:22"
+fn get_input() -> u32 {
+    let mut input = String::new();
+    io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
+
+    let input: u32 = input.trim().parse().expect("Please type a number!");
+    
+    input
 }
